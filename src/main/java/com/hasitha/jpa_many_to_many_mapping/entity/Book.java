@@ -7,11 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+/*This is considered as the parent entity*/
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String bookName;
+    /*
+    * CascadeType.PERSIST means while saving parent data, pls save child data also.
+    * So while performing other actions like DELETE , child entity will not be affected.
+    * */
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name="author2books",
     joinColumns = @JoinColumn(name="bookId"),
@@ -40,5 +45,13 @@ public class Book {
 
     public void setListOfAuthors(List<Author> listOfAuthors) {
         this.listOfAuthors = listOfAuthors;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", bookName='" + bookName + '\'' +
+                '}';
     }
 }

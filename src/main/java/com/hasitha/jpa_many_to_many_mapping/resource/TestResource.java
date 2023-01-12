@@ -45,11 +45,6 @@ public class TestResource {
 
         b2.getListOfAuthors().add(a2);
 
-        a1.getListOfBooks().add(b1);
-        a2.getListOfBooks().add(b1);
-        a3.getListOfBooks().add(b1);
-        a2.getListOfBooks().add(b2);
-
         Book book1=bookRepository.save(b1);
         Book book2=bookRepository.save(b2);
 
@@ -64,14 +59,34 @@ public class TestResource {
     public String retrieveData(){
         Optional<Book> book=bookRepository.findById(Long.parseLong("1"));
         if(book.isPresent()){
-            Book b=book.get();
-            List<Author> authorList=b.getListOfAuthors();
             String result="";
-            result=result.concat(b.getId()+" "+b.getBookName());
-            for (Author author:authorList) {
-                result=result.concat("Author "+author.getAuthorName()+" ");
+            result=(book.get().getId() + " | "+book.get().getBookName())+"***************";
+            for (Author author:book.get().getListOfAuthors()) {
+                result=result+(author.getId() + " | "+author.getAuthorName()+ "###########");
             }
             return result;
+
+        }else{
+            return "No data found";
+
+        }
+
+    }
+    /*
+     * Since I have mapped bi-directionaly, when query for child entity I get parent
+     * entity data also.
+     * */
+    @GetMapping("/retrieveAuthor")
+    public String retrieveAuthorData(){
+        Optional<Author> author=authorRepository.findById(Long.parseLong("2"));
+        if(author.isPresent()){
+            String result="";
+            result=(author.get().getId() + " | "+author.get().getAuthorName())+ "**************";
+            for (Book book:author.get().getListOfBooks()) {
+                result=result+(book.getId() + " | "+book.getBookName())+ "#################";
+            }
+            return result;
+
         }else{
             return "No data found";
 
@@ -98,6 +113,8 @@ public class TestResource {
 
     }
 
+    /*Here only Parent entity data will be deleted since I have only provided
+    * CascadeType as PERSIST for Book entity */
     @GetMapping("/delete")
     public String deleteData(){
         Optional<Book> book=bookRepository.findById(Long.parseLong("2"));

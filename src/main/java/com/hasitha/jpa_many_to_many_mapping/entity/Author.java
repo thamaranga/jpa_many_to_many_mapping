@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+/*This is considered as the child entity*/
 public class Author {
 
     @Id
@@ -36,5 +37,13 @@ public class Author {
 
     public void setListOfBooks(List<Book> listOfBooks) {
         this.listOfBooks = listOfBooks;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", authorName='" + authorName + '\'' +
+                '}';
     }
 }
